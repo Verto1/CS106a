@@ -1,0 +1,93 @@
+/*
+ * File: MidpointFindingKarel.java
+ * -------------------------------
+ * When you finish writing it, the MidpointFindingKarel class should
+ * leave a beeper on the corner closest to the center of 1st Street
+ * (or either of the two central corners if 1st Street has an even
+ * number of corners).  Karel can put down additional beepers as it
+ * looks for the midpoint, but must pick them up again before it
+ * stops.  The world may be of any size, but you are allowed to
+ * assume that it is at least as tall as it is wide.
+ */
+ 
+import stanford.karel.*;
+
+
+public class MidpointFindingKarel extends SuperKarel {
+
+  public void run() {
+		eastCorner();
+		westCorner();
+		findMidpoint();
+		cleanUp();
+	}
+	//Finishing touches on the middle. 
+	private void cleanUp() {
+		orientKarel();
+		if (beepersPresent()) {
+			pickBeeper();
+			move();
+			}
+		if (noBeepersPresent()) {
+			turnAround();
+			move();
+			move();
+			orientKarel();
+		}
+	}
+//Karel works his way from the outside end towards the midpoint
+	private void findMidpoint() {
+		orientKarel();
+		move();
+		while (noBeepersPresent()) {
+			pickAndPull();
+		}
+	}
+//Pick and pull, this is the logic for Karel to pick up the extra beepers as he works his way towards the midpoint.
+	private void pickAndPull() {
+		while (noBeepersPresent()) {
+			move();
+		}
+			pickBeeper();
+			turnAround();
+			move();
+			putBeeper();
+			move();
+	}
+//Karel move to west corner and places a beeper
+	private void westCorner() {
+	turnAround();
+	while (frontIsClear()) {
+		move();
+	}
+	putBeeper();
+	}
+//Karel moves to the east corner and places a beeper
+	private void eastCorner() {
+		if (facingEast()) {
+			while (frontIsClear()) {
+				move();
+			}
+			putBeeper();
+		} else {
+			orientKarel();
+			while (frontIsClear()) {
+				move();
+			}
+			putBeeper();
+		}
+	}
+	//Orients Karel East
+	private void orientKarel() {
+		if (facingNorth()) {
+			turnRight();
+		}
+		if (facingWest()) {
+			turnAround();
+		}
+		if (facingSouth()) {
+			turnLeft();
+		}
+	}
+	
+}
